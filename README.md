@@ -10,6 +10,9 @@ share one Homebrew installation between trusted administrator accounts on macOS
   <img src="assets/demo.gif" alt="multibrew demo">
 </p>
 
+> [!WARNING]
+> multibrew only supports Apple Silicon Macs
+
 
 ## why?
 

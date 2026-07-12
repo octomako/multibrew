@@ -1,7 +1,31 @@
 # multibrew
 
-multibrew shares one Homebrew installation between trusted administrator accounts on Apple Silicon macOS
-it installs as a normal command at `/usr/local/bin/multibrew`
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](...)
+![macOS](https://img.shields.io/badge/macOS-Apple%20Silicon-black)
+![Shell](https://img.shields.io/badge/Shell-Bash-blue)
+
+share one Homebrew installation between trusted administrator accounts on macOS
+
+<p align="center">
+  <img src="assets/demo.gif" alt="multibrew demo">
+</p>
+
+
+## why?
+
+Homebrew is normally owned by a single user. on Macs with multiple trusted administrator accounts, this often leads to seperate Homebrew installations for each user
+
+**multibrew** configures a single shared Homebrew installation so every trusted administrator uses the same packages, casks, and updates
+
+
+## features
+
+- share one Homebrew installation between trusted administrator accounts
+- uses the local `multibrew` group
+- install or adopt an existing Homebrew installation
+- doesn't run Homebrew as root
+- simple install and removal
+
 
 ## install
 
@@ -9,59 +33,67 @@ it installs as a normal command at `/usr/local/bin/multibrew`
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/octomako/multibrew/main/install.sh)"
 ```
 
-then mount shared Homebrew
-
 ```bash
 sudo multibrew mount
 ```
+
 
 ## commands
 
-```text
-sudo multibrew mount
-sudo multibrew unmount
-sudo multibrew repair
-sudo multibrew update
+| command   | description                                     |
+| --------- | ----------------------------------------------- |
+| `mount`   | install or adopt a shared Homebrew installation |
+| `status`  | show current configuration                      |
+| `members` | manage shared users                             |
+| `repair`  | restore permissions after membership changes    |
+| `update`  | update multibrew                                |
+| `unmount` | disable sharing while keeping Homebrew          |
+| `erase`   | remove Homebrew and shared configuration        |
+
+
+## managing members
+
+`mount` lets you choose administrator accounts during setup
+
+you can later manage members with:
+
+```bash
 sudo multibrew members
-sudo multibrew status
-sudo multibrew erase
 ```
 
-`mount` installs or adopts Homebrew and enables shared access
-`unmount` removes shared access and keeps Homebrew for the original owner
-`erase` removes Homebrew and the shared setup but keeps the multibrew command
-
-## members
-
-multibrew always uses the local `multibrew` group
-
-`sudo multibrew mount` lets you select administrator accounts during setup
-`sudo multibrew members` can add users, remove users, or open Users & Groups
-
-the group can also be edited directly in System Settings under Users & Groups
-run this after changing membership in System Settings
+if group membership is changed outside multibrew, run:
 
 ```bash
 sudo multibrew repair
 ```
 
-changed users must sign out and back in before using Homebrew
+users should sign out and back in for the changes to take effect
 
-## remove the command
+
+## security
+
+- every multibrew member can modify software used by every other member
+- only add trusted administrator accounts
+- multibrew never runs Homebrew itself as root
+- root access is used for system configuration, permissions, group management, and cleanup
+
+
+## uninstall
+
+only remove the `multibrew` command:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/octomako/multibrew/main/uninstall.sh)"
 ```
 
-this only removes `/usr/local/bin/multibrew`
+disable sharing but keep homebrew:
 
-use `sudo multibrew unmount` first to keep Homebrew without sharing
-use `sudo multibrew erase` first to remove Homebrew too
+```bash
+sudo multibrew unmount
+```
 
-## security
+remove the shared homebrew installation and multibrew configuration:
 
-- every multibrew member can modify software used by every other member
-- only add trusted local administrators
-- multibrew never runs Homebrew itself as root
-- root access is used for system configuration, permissions, group management, and cleanup
-- complete cask data cleanup can require Full Disk Access for the terminal
+```bash
+sudo multibrew erase
+```
